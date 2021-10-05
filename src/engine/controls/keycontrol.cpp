@@ -229,7 +229,11 @@ void KeyControl::updateKeyCOs(double fileKeyNumeric, double pitchOctaves) {
     m_pEngineKey->set(KeyUtils::keyToNumericValue(adjusted.first));
     double diff_to_nearest_full_key = adjusted.second;
     m_pEngineKeyDistance->set(diff_to_nearest_full_key);
+
+    //! infinite loop
     m_pPitch->set(pitchOctaves * 12);
+
+
     //qDebug() << "updateKeyCOs 2" << diff_to_nearest_full_key;
 }
 
@@ -285,9 +289,7 @@ void KeyControl::updatePitch() {
     double dFileKey = m_pFileKey->get();
     m_pPitchAdjust->set(
             KeyUtils::powerOf2ToSemitoneChange(m_pitchRateInfo.pitchTweakRatio));
-    //!
     updateKeyCOs(dFileKey, KeyUtils::powerOf2ToOctaveChange(pitchKnobRatio));
-    //!
     //qDebug() << "KeyControl::slotPitchChanged 2" << pitch <<
     //        m_pitchRateInfo.pitchRatio <<
     //        m_pitchRateInfo.pitchTweakRatio <<
