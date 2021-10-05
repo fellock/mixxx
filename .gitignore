@@ -89,3 +89,7 @@ lib/hidapi/dist
 lib/hidapi/doxygen
 lib/hidapi/hidtest
 lib/hidapi/testgui
+
+.vs/
+.vscode/
+out/

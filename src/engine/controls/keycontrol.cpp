@@ -24,20 +24,21 @@ KeyControl::KeyControl(const QString& group,
     m_pitchRateInfo.keylock = false;
 
     // pitch is the distance to the original pitch in semitones
-    // knob in semitones; 9.4 ct per midi step allowOutOfBounds = false;
-    m_pPitch = new ControlPotmeter(ConfigKey(group, "pitch"), -30.0, 30.0, false);
+    // knob in semitones; 9.4 ct per midi step allowOutOfBounds = true;
+    m_pPitch = new ControlPotmeter(ConfigKey(group, "pitch"), -6.0, 6.0, true);
     // Coarse adjust by full semitone steps.
     m_pPitch->setStepCount(12);
     // Fine adjust with semitone / 10 = 10 ct;.
     m_pPitch->setSmallStepCount(120);
-    connect(m_pPitch, &ControlObject::valueChanged,
-            this, &KeyControl::slotPitchChanged,
-            Qt::DirectConnection);
+    // connect(m_pPitch, &ControlObject::valueChanged,
+    //         this, &KeyControl::slotPitchChanged,
+    //         Qt::DirectConnection);
+    m_pPitch->connectValueChangeRequest(this, &KeyControl::slotPitchChanged, Qt::DirectConnection);
 
     // pitch_adjust is the distance to the linear pitch in semitones
     // set by the speed slider or to the locked key.
-    // pitch_adjust knob in semitones; 4.7 ct per midi step; allowOutOfBounds = false;
-    m_pPitchAdjust = new ControlPotmeter(ConfigKey(group, "pitch_adjust"), -15.0, 15.0, false);
+    // pitch_adjust knob in semitones; 4.7 ct per midi step; allowOutOfBounds = true;
+    m_pPitchAdjust = new ControlPotmeter(ConfigKey(group, "pitch_adjust"), -3.0, 3.0, true);
     // Coarse adjust by full semitone steps.
     m_pPitchAdjust->setStepCount(6);
     // Fine adjust with semitone / 10 = 10 ct;.
@@ -284,8 +285,9 @@ void KeyControl::updatePitch() {
     double dFileKey = m_pFileKey->get();
     m_pPitchAdjust->set(
             KeyUtils::powerOf2ToSemitoneChange(m_pitchRateInfo.pitchTweakRatio));
+    //!
     updateKeyCOs(dFileKey, KeyUtils::powerOf2ToOctaveChange(pitchKnobRatio));
-
+    //!
     //qDebug() << "KeyControl::slotPitchChanged 2" << pitch <<
     //        m_pitchRateInfo.pitchRatio <<
     //        m_pitchRateInfo.pitchTweakRatio <<
